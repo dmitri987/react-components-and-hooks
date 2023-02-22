@@ -2,7 +2,7 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import Progress from "./Progress";
 import "highlight.js/styles/stackoverflow-dark.css";
 import hljs from "highlight.js";
-import useScroll from "../../hooks/useScroll";
+import useScroll from "../../hooks/useScroll/useScroll";
 
 export default function ProgressStories() {
   const [value, setValue] = useState(50);

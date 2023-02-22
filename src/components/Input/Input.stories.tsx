@@ -73,7 +73,7 @@ const assert = (condition: boolean) =>
 export const Debounced = (props: InputProps) => {
   const [value, setValue] = useState("");
   const [inputElement, setInputElement] =
-    useState<HTMLInputElement | null>(null);
+    useState<HTMLInputElement | HTMLTextAreaElement | null>(null);
   const [blurCounter, setBlurCounter] = useState(0);
 
   return (
