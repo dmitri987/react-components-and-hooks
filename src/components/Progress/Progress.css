@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .default-progress-track {
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    block-size: 8px;
+    background-color: #f0f9ff;
+    transition-duration: 150ms;
+    transition-timing-function: linear;
+    transition-delay: 0s;
+  }
+
+  .default-progress-bar {
+    display: grid;
+    place-content: center;
+    block-size: 100%;
+    transition-duration: inherit;
+    transition-timing-function: inherit;
+    transition-delay: inherit;
+    background-color: #0369a1;
+  }
+
+  .vertical.default-progress-track {
+    writing-mode: vertical-lr;
+    inline-size: auto;
+  }
+
+  .default-progress-with-external-bar {
+    transition-duration: inherit;
+    transition-timing-function: inherit;
+    transition-delay: inherit;
+  }
+
+  .default-progress-track-indeterminate {
+    overflow: hidden !important;
+  }
+
+  .default-progress-bar-indeterminate {
+    block-size: 100% !important;
+    transform-origin: left !important;
+    animation-duration: 1.6s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: indeterminate-progress;
+  }
+
+  [dir="rtl"] .default-progress-bar-indeterminate {
+    transform-origin: right !important;
+    animation-name: indeterminate-progress-reverse;
+  }
+
+  .vertical .default-progress-bar-indeterminate {
+    transform-origin: top !important;
+    animation-name: indeterminate-progress-vertical;
+  }
+
+  .vertical[dir="rtl"] .default-progress-bar-indeterminate {
+    transform-origin: bottom !important;
+    animation-name: indeterminate-progress-reverse-vertical;
+  }
+
+  @keyframes indeterminate-progress {
+    0% {
+      scale: 0 1;
+    }
+    50% {
+      translate: 0;
+      scale: 1 1;
+    }
+    100% {
+      translate: 100%;
+      scale: 0 1;
+    }
+  }
+
+  @keyframes indeterminate-progress-reverse {
+    0% {
+      scale: 0 1;
+    }
+    50% {
+      translate: 0;
+      scale: 1 1;
+    }
+    100% {
+      translate: -100%;
+      scale: 0 1;
+    }
+  }
+
+  @keyframes indeterminate-progress-vertical {
+    0% {
+      scale: 1 0;
+    }
+    50% {
+      translate: 0 0;
+      scale: 1 1;
+    }
+    100% {
+      translate: 0 100%;
+      scale: 1 0;
+    }
+  }
+
+  @keyframes indeterminate-progress-reverse-vertical {
+    0% {
+      scale: 1 0;
+    }
+    50% {
+      translate: 0 0;
+      scale: 1 1;
+    }
+    100% {
+      translate: 0 -100%;
+      scale: 1 0;
+    }
+  }
+}

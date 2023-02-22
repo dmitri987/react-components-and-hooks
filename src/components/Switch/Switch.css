@@ -1,0 +1,76 @@
+/* defaults overridable with Tailwind utility classes */
+.track-ctwgsjd {
+  border-radius: 100vmax;
+  border-width: 2px;
+  border-color: transparent;
+  transition-duration: var(--switch-transition-duration, 200ms);
+  background-color: var(--switch-track-color, #888);
+}
+
+.track-ctwgsjd:where([data-headlessui-state="checked"]) {
+  background-color: var(--switch-track-color-checked, #2b8a91);
+}
+
+/* not overridable (extra class in selector for elevated specificity) */
+.switch.track-ctwgsjd {
+  --inline-size: var(--w, var(--switch-width, 3rem));
+  --block-size: var(--h, var(--switch-height, 1.7rem));
+
+  display: flex;
+  position: relative;
+  justify-items: start;
+  align-items: center;
+  flex-shrink: 0;
+  width: var(--inline-size);
+  height: var(--block-size);
+  padding: 0;
+  /* overflow: hidden; */
+  cursor: pointer;
+}
+
+.vertical.switch.track-ctwgsjd {
+  flex-direction: column-reverse;
+  height: var(--inline-size);
+  width: var(--block-size);
+}
+
+/* defaults overridable with Tailwind utility classes */
+.thumb-lsujhhbw {
+  border-radius: 100%;
+  pointer-events: none;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transition-duration: inherit;
+  background-color: var(--thumb, var(--switch-thumb-color, white));
+}
+
+:where([data-headlessui-state~="checked"]) .thumb-lsujhhbw {
+  background-color: var(
+    --switch-thumb-color-checked,
+    var(--switch-thumb-color, white)
+  );
+  transform: translateX(calc(var(--inline-size) - var(--block-size)));
+}
+
+:where([dir="rtl"] [data-headlessui-state~="checked"]) .thumb-lsujhhbw {
+  transform: translateX(calc(-1 * (var(--inline-size) - var(--block-size))));
+}
+
+/* not overridable (extra class in selector for elevated specificity) */
+.switch.thumb-lsujhhbw {
+  display: inline-block;
+  height: 100%;
+  width: auto;
+  aspect-ratio: 1;
+  /* justify-self: start; */
+  /* align-self: center; */
+}
+
+.vertical.track-ctwgsjd .thumb-lsujhhbw {
+  width: 100%;
+  height: auto;
+}
+
+:where([data-headlessui-state~="checked"]).vertical.track-ctwgsjd
+  .thumb-lsujhhbw {
+  transform: translateY(calc(-1 * (var(--inline-size) - var(--block-size))));
+}
