@@ -1,0 +1,3 @@
+[submodule "libs/syntax-highlight"]
+	path = libs/syntax-highlight
+	url = https://github.com/dmitri987/syntax-highlight.git
