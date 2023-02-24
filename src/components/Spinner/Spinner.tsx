@@ -106,7 +106,7 @@ export default function Spinner({
           }}
         ></circle>
       </svg>
-      {typeof value !== undefined && label && (
+      {value !== undefined && label && (
         <span
           className={typeof label === 'string' ? label : ''}
           style={{
