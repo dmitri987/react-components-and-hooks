@@ -1,3 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+/* @import "bootstrap"; */
+
+/* @import "bootstrap/dist/css/bootstrap.min.css"; */
+@import "./components/components.css";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */

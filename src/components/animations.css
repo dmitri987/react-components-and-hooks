@@ -1,0 +1,13 @@
+@keyframes grow {
+  0% {
+    transform: scale(0);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
