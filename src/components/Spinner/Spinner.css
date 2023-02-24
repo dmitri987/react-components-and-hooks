@@ -1,0 +1,51 @@
+.spinner-root-z01bqi {
+  position: relative;
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  color: rgb(25, 118, 210);
+  animation: var(--animation-duration, 1.4s) linear var(--animation-delay, 0s)
+    infinite normal none running spin;
+
+  /* to be passed down to svg */
+  stroke-width: 3.6;
+}
+
+.spinner-inner-14891ef {
+  stroke: currentcolor;
+  stroke-dasharray: 80px, 200px;
+  stroke-dashoffset: 0;
+  animation: var(--animation-duration, 1.4s) ease-in-out
+    var(--animation-delay, 0s) infinite normal none running shrink-stroke;
+}
+
+@keyframes shrink-stroke {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
+
+@keyframes grow {
+  0% {
+    transform: scale(0);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
