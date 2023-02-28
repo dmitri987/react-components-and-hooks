@@ -18,7 +18,7 @@
  *   ]}
  *  </Describe>
  */
-const Result = ({ result }: { result?: boolean | number | string }) => {
+export const Result = ({ result }: { result?: boolean | number | string }) => {
   if (result === undefined) return null;
 
   return (
@@ -39,7 +39,7 @@ const Result = ({ result }: { result?: boolean | number | string }) => {
 
 type Tests = Array<[description: string, result?: boolean | number | string]>;
 
-const Describe = (props: { title?: string; children?: Tests }) => (
+export const Describe = (props: { title?: string; children?: Tests }) => (
   <div className="bg-gray-700 text-gray-300 mt-4 p-4 rounded font-mono">
     {props.title && <h3 className="text-lg text-white mb-4">{props.title}</h3>}
     {props.children && (
@@ -55,5 +55,4 @@ const Describe = (props: { title?: string; children?: Tests }) => (
   </div>
 );
 
-export default Describe;
 
