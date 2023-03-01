@@ -15,7 +15,7 @@ export default {
 } as ComponentMeta<typeof Input>;
 
 const Template: ComponentStory<typeof Input> = (args) => (
-  <Input className="p-2 bg-white" {...args} />
+  <Input className="p-2 bg-white border rounded" {...args} />
 );
 
 // defaultValue?: string;
