@@ -46,12 +46,74 @@ type Props = {
 const computedStyle = (element: HTMLElement | null, field: string) =>
   element ? (getComputedStyle(element) as Record<string, any>)[field] : "";
 
-const getStyle = (
+export default function Collapse({ open, className, inline, children }: Props) {
+  const initialRef = useRef(true);
+  const [wrapperElement, setWrapperElement] =
+    useState<HTMLDivElement | null>(null);
+
+  const { ref: contentRef, height } = useResizeObserver<HTMLDivElement>();
+
+  useEffect(() => {
+    if (!wrapperElement) return;
+
+    wrapperElement.style.display = "";
+    wrapperElement.toggleAttribute("hidden", false);
+  }, [open]);
+
+  useEffect(function hideAfterCollapse() {
+    if (!wrapperElement) return;
+
+    // hide on initial appearance
+    if (initialRef.current) {
+      initialRef.current = false;
+      if (open || inline) return;
+
+      wrapperElement.style.display = "none";
+      wrapperElement.toggleAttribute("hidden", true);
+    }
+
+    const hide = () => {
+      if (inline) return;
+
+      const isOpen = wrapperElement.matches("[data-headlessui-state~=open]");
+      if (!isOpen) {
+        wrapperElement.style.display = "none";
+        wrapperElement.toggleAttribute("hidden", true);
+      }
+    };
+    wrapperElement.addEventListener("transitionend", hide);
+    return () => {
+      wrapperElement.removeEventListener("transitionend", hide);
+    };
+  }, [wrapperElement, inline]);
+
+  if (!children) return null;
+
+  const style = getStyle(
+    wrapperElement,
+    open,
+    inline ? "inline" : "block",
+    height
+  );
+
+  return (
+    <div
+      className={className}
+      style={style}
+      ref={setWrapperElement}
+      data-headlessui-state={open ? "open" : ""}
+    >
+      <div ref={contentRef}>{children}</div>
+    </div>
+  );
+}
+
+function getStyle(
   element: HTMLElement | null,
   open: boolean,
   collapseDirection: string,
   size?: number
-) => {
+) {
   if (!element) return {};
 
   const ltr = computedStyle(element, "direction") !== "rtl";
@@ -84,60 +146,3 @@ const getStyle = (
   return style;
 };
 
-export default function Collapse({ open, className, inline, children }: Props) {
-  const initialRef = useRef(true);
-  const [wrapperElement, setWrapperElement] =
-    useState<HTMLDivElement | null>(null);
-
-  const { ref: contentRef, height } = useResizeObserver<HTMLDivElement>();
-
-  useEffect(() => {
-    if (!wrapperElement) return;
-
-    wrapperElement.style.display = "";
-    wrapperElement.toggleAttribute("hidden", false);
-  }, [open]);
-
-  useEffect(function hideAfterCollapse() {
-    if (!wrapperElement) return;
-
-    // hide on initial appearance
-    if (initialRef.current && !open) {
-      wrapperElement.style.display = "none";
-      wrapperElement.toggleAttribute("hidden", true);
-      initialRef.current = false;
-    }
-
-    const hide = () => {
-      const isOpen = wrapperElement.matches("[data-headlessui-state~=open]");
-      if (!isOpen) {
-        wrapperElement.style.display = "none";
-        wrapperElement.toggleAttribute("hidden", true);
-      }
-    };
-    wrapperElement.addEventListener("transitionend", hide);
-    return () => {
-      wrapperElement.removeEventListener("transitionend", hide);
-    };
-  }, [wrapperElement]);
-
-  if (!children) return null;
-
-  const style = getStyle(
-    wrapperElement,
-    open,
-    inline ? "inline" : "block",
-    height
-  );
-
-  return (
-    <div
-      className={className}
-      style={style}
-      ref={setWrapperElement}
-      data-headlessui-state={open ? "open" : ""}
-    >
-      <div ref={contentRef}>{children}</div>
-    </div>
-  );
-}
