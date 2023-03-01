@@ -1,4 +1,4 @@
-import { createFilter, filterAndSortByRelevance, EMPTY } from "../useFilter";
+import { createFilter, filterAndSortByRelevance, EMPTY } from "./useFilter";
 
 describe(`createFilter<T>(initialList: T[], options?: Options<T>): Filter<T>`, () => {
   it(`should return function`, () => {

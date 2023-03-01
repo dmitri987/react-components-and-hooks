@@ -2,6 +2,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import useRipple, { RippleOptions } from "./useRipple";
 import "../../index.css";
 import { ButtonHTMLAttributes, HTMLAttributes, useState } from "react";
+import Switch from "../../components/Switch/Switch";
 
 
 const Button = (props: RippleOptions & HTMLAttributes<HTMLButtonElement>) => {
@@ -41,6 +42,7 @@ export const Default = (args: RippleOptions) => {
 
   return <div className="">
     <Button {...args} onClick={() => setClickCount(c => c + 1)} />
+    <Switch className="bg-gray-500 ui-checked:bg-cyan-600" ripple />
     <ul className="grid gap-3 list-none bg-gray-700 text-white mt-4 p-4 rounded font-mono">
       <li>Should cancel previous ripple, when new ripple is created</li>
       <li>Should ripple when clicked with keyboard</li>

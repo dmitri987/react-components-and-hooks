@@ -4,7 +4,7 @@ import Code from "./Code";
 import "../../index.css";
 import "../../../libs/syntax-highlight/themes/prism/default.css";
 import "highlight.js/styles/default.css";
-import { clss } from "../../utils/utils";
+import { clss } from "../../libs/utils";
 
 export default {
   title: "Components/Code",

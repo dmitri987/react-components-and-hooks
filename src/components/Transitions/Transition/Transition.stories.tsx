@@ -4,7 +4,7 @@ import {
 import type { ComponentStory, ComponentMeta } from "@storybook/react";
 import "../../../index.css";
 import Transition from "./Transition";
-import Describe from "../../Testing/Describe";
+import { Describe } from "../../Testing/Describe";
 
 export default {
   title: "Components/Transitions/Transition",

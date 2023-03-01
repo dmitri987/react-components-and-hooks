@@ -1,6 +1,3 @@
-import { CSSProperties, HTMLAttributes } from "react";
-import { clss } from "../../utils/utils";
-
 /*
  * Based on MaterialUI CircularProgress (see https://mui.com/material-ui/react-progress/)
  *
@@ -46,6 +43,8 @@ import { clss } from "../../utils/utils";
  *
  */
 
+import { CSSProperties, HTMLAttributes } from "react";
+import { clss } from "../../libs/utils";
 
 type SpinnerProps = {
   /* if not provided, will spin indefinitely */

@@ -1,6 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import useResizeObserver from "use-resize-observer";
 import "../../index.css";
 import { clss } from "../../utils/utils";
 import Spinner from "./Spinner";
@@ -21,6 +22,8 @@ const Description = (props: any) => (
 
 export const ShowCase = () => {
   const [value, setValue] = useState(25);
+  const { width, height } = useResizeObserver({ ref: document.body });
+  console.log(width, height)
 
   return (
     <div className="grid grid-cols-[auto_1fr] gap-x-8 gap-y-2 ml-1/4 items-center justify-items-center">

@@ -7,7 +7,7 @@ import {
 import useSyntaxHighlight, {
   SyntaxHighlightOptions,
 } from "../../hooks/useSyntaxHighlight/useSyntaxHighlight";
-import {clss} from "../../utils/utils";
+import {clss} from "../../libs/utils";
 
 
 type Props = {
