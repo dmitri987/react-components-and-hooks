@@ -646,7 +646,9 @@ export const Tests = () => {
   }, []);
 
   useEffect(() => {
-    if (img13) img13.style.width = "0px";
+    setTimeout(() => {
+      if (img13) img13.style.width = "0px";
+    }, 30);
   }, [img13]);
 
   useEffect(() => {
@@ -688,7 +690,7 @@ export const Tests = () => {
         className="h-0"
         srcSet="/some_picture2"
         lazy={{
-          onIntersect: () => setTimeout(() => setUpdate((u) => !u), 50)
+          onIntersect: () => setTimeout(() => setUpdate((u) => !u), 50),
         }}
       />
       <Describe title="Image: general features">
@@ -726,10 +728,8 @@ export const Tests = () => {
       <Describe title="Image: resize">
         {[
           [
-            `should set 'sizes' to '{actual_width}px' for <Image srcSet="" />`,
-            img8
-              ? +img8.sizes.slice(0, -2) === img8?.getBoundingClientRect().width
-              : false,
+            `should not set 'sizes' for <Image srcSet="" />`,
+            !!img8 && img8.sizes === "",
           ],
           [
             `should set 'sizes' to '{actual_width}px' for <Image srcSet="foo 480w" />`,
@@ -741,7 +741,7 @@ export const Tests = () => {
           ],
           [
             `should not scale down 'sizes' on image shrinking`,
-            img13 ? img13.sizes === "320px" : false,
+            img13 ? img13.sizes === '320px' : false,
           ],
           [
             `should not change 'sizes' when width is <= next 'srcset' breakpoints`,
@@ -816,7 +816,7 @@ export const Tests = () => {
         }}
       />
       <Image ref={setImg12} srcSet="" className="w-0" />
-      <Image ref={setImg13} srcSet="" className="w-80" />
+      <Image ref={setImg13} srcSet="idjf" className="w-80" />
       <Image
         ref={setImg14}
         srcSet="foo 240w, bar 640w"
