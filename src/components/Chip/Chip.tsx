@@ -1,7 +1,7 @@
 import { Switch } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { ReactElement, ReactNode } from "react";
-import {clss} from "../../utils/utils";
+import {clss} from "../../libs/utils";
 
 type CommonProps<T extends any = string> = {
   // as?: string; if 'selected' or 'defaultSelected' default is 'button', else 'span' #todo
