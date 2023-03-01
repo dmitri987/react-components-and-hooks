@@ -1,3 +1,11 @@
+/*
+ * const [name, setName] = useState('');
+ *
+ * <Input defaultValue="John" onChange={setName} debounce={500} />
+ *
+ * <Input as="textarea" value={name} onChange={setName} />
+ */
+
 import {
   ChangeEvent,
   createElement,

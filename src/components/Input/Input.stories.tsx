@@ -81,7 +81,7 @@ export const Debounced = (props: InputProps) => {
       <Input
         {...props}
         ref={setInputElement}
-        className="bg-white"
+        className="bg-white border rounded p-2"
         name="foo"
         value={value}
         onChange={setValue}
