@@ -9,21 +9,23 @@ export type ScrollCoordinates = {
 };
 
 export type UseScrollProps = {
-  container?: RefObject<HTMLElement> | HTMLElement | null;
+  /* if undefined, track window scroll (default) */
+  container?: RefObject<Element> | Element | null;
+  /* limit scroll direction to track; default both */
   axis?: "x" | "y";
+  /* track scroll not more often than
+   * 'throttle' im miliseconds; default 0 */
   throttle?: number;
 };
 
-const resolveElement = (
-  ref?: RefObject<HTMLElement> | HTMLElement
-): HTMLElement =>
-  !ref || ("current" in ref && !ref.current)
-    ? document.documentElement
-    : "current" in ref
-    ? ref.current!
-    : ref;
+const resolveElement = (ref?: RefObject<Element> | Element): Element =>
+  ref instanceof Element
+    ? ref
+    : ref && "current" in ref && ref.current instanceof Element
+    ? ref.current
+    : document.documentElement;
 
-// return empty object initially 
+// return empty object initially
 function useScroll({
   container,
   axis,
@@ -61,7 +63,7 @@ function useScroll({
         };
 
         if (newCoords) {
-          trigger(t => !t)
+          trigger((t) => !t);
           coordsRef.current = newCoords;
         }
       }
@@ -76,3 +78,4 @@ function useScroll({
 }
 
 export default useScroll;
+
