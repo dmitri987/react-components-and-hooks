@@ -1,34 +1,99 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+import { CircularProgress } from "@mui/material";
+import Switch from "./components/Switch/Switch";
+import { Switch as HuiSwitch } from "@headlessui/react";
+import Input from "./components/Input/Input";
+import { Form } from "react-bootstrap";
+import { Listbox } from "@headlessui/react";
+import  Image  from './components/Image/Image';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <div className="grid place-content-center gap-4">
+      <Image />
+      <Switch className="bg-gray-500 ui-checked:bg-blue-500 overflow-hidden duration-150" />
+      <Input className="form-control w-full border-red-500 focus:border-red-500 " />
+      <Input className="form-control form-control-sm" />
+      <Input className="form-control form-control-lg" />
+      <select className="form-select">
+        <option>first</option>
+        <option>second</option>
+        <option>third</option>
+      </select>
+      <Listbox>
+        <Listbox.Button className="form-select">listbox</Listbox.Button>
+        <Listbox.Options>
+          <Listbox.Option value="first">first</Listbox.Option>
+          <Listbox.Option value="first">first</Listbox.Option>
+          <Listbox.Option value="first">first</Listbox.Option>
+        </Listbox.Options>
+      </Listbox>
+
+      <span className="mui-spinner-z01bqi w-6 h-6" role="progressbar">
+        <svg className="block" viewBox="22 22 44 44">
+          <circle
+            className="mui-spinner-14891ef"
+            cx="44"
+            cy="44"
+            r="20.2"
+            fill="none"
+            stroke-width="3.6"
+          ></circle>
+        </svg>
+      </span>
+
+      <span className="spinner-border duration-300 text-green-600 w-12 h-12"></span>
+      <span className="animate-pulse bg-green-600 rounded-full w-12 h-12"></span>
+      <span className="animate-grow bg-green-600 rounded-full w-12 h-12"></span>
+      <CircularProgress />
+
+      <input type="checkbox" className="btn-check" />
+      <input type="range" className="form-range" />
+      <input type="range" />
+      <button className="btn-close" />
+      <p className="placeholder-glow">
+        <span className="placeholder w-full"></span>
       </p>
+      <div className="form-floating">
+        <label htmlFor="name">Name</label>
+        <input id="name" className="form-control" placeholder="Enter name" />
+      </div>
+
+      <table className="table table-hover table-bordered w-[500px]">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody className="table-group-divider">
+          <tr className="table-active">
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colSpan={2}>Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
