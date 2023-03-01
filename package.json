@@ -12,7 +12,6 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "common": "file:libs",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@headlessui/react": "^1.7.11",
