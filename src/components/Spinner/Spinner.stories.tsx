@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { useRef, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 import "../../index.css";
-import { clss } from "../../utils/utils";
+import { clss } from "../../libs/utils";
 import Spinner from "./Spinner";
 
 export default {
