@@ -5,9 +5,6 @@
  *   // get observer from the pool
  *   const observer = getIntersectionObserver(options)
  *
- *   // subscribe 'target' to observer with 'options'
- *   // call 'onIntersect' on each intersection
- *   useIntersectionObserver(target, onIntersect, options?)
  *
  * 'options' are minified to the shortest form, so for example:
  *
@@ -32,11 +29,12 @@ export interface ReactiveIntersectionObserver {
   readonly root: Element | Document | null;
   readonly rootMargin: string;
   readonly thresholds: ReadonlyArray<number>;
+  readonly targets: ReadonlyArray<Element | Document>;
 
   /* if `target` or `onIntersect` is null, do nothing */
   observe(
     target: Element | RefObject<Element> | null,
-    onIntersect: OnIntersectCallback   
+    onIntersect: OnIntersectCallback
   ): void;
 
   /* if `target` is null, do nothing */
@@ -46,25 +44,40 @@ export interface ReactiveIntersectionObserver {
 }
 
 export type ReactiveIntersectionObserverInit = {
+  /* add RefObject to native 'root' type */
   root?: Element | RefObject<Element> | Document | null;
 } & Omit<IntersectionObserverInit, "root">;
 
-export function createReactiveIntersectionObserver(
+function createReactiveIntersectionObserver(
   options?: IntersectionObserverInit
 ): ReactiveIntersectionObserver {
   let reactiveIntersectionObserver: ReactiveIntersectionObserver;
 
-  const nativeIntersectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const _target = entry.target as WithKey;
-      _target[onIntersectKey]?.(entry, reactiveIntersectionObserver);
-    });
-  }, { root: document, ...options });
+  const nativeIntersectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const _target = entry.target as WithKey;
+        _target[onIntersectKey]?.(entry, reactiveIntersectionObserver);
+      });
+    },
+    {
+      root: options?.root ?? document,
+      rootMargin: resolveRootMargin(options?.rootMargin, {
+        viewportUnitsToPixels: true,
+      }),
+      threshold: options?.threshold,
+    }
+  );
+
+  const targets: Set<Element | Document> = new Set();
 
   reactiveIntersectionObserver = {
     root: nativeIntersectionObserver.root,
     rootMargin: nativeIntersectionObserver.rootMargin,
     thresholds: nativeIntersectionObserver.thresholds,
+    get targets() {
+      return [...targets];
+    },
 
     observe(target, onIntersect) {
       const _target = resolveRef(target);
@@ -72,6 +85,7 @@ export function createReactiveIntersectionObserver(
 
       (_target as WithKey)[onIntersectKey] = onIntersect;
       nativeIntersectionObserver.observe(_target as Element);
+      targets.add(_target);
     },
 
     unobserve(target) {
@@ -80,6 +94,7 @@ export function createReactiveIntersectionObserver(
 
       delete (_target as WithKey)[onIntersectKey];
       nativeIntersectionObserver.unobserve(_target as Element);
+      targets.delete(_target);
     },
 
     disconnect: nativeIntersectionObserver.disconnect.bind(
@@ -92,21 +107,24 @@ export function createReactiveIntersectionObserver(
 const defaultIntersectionObserver = createReactiveIntersectionObserver();
 
 /* keep observers in global pool and query them with getIntersectionObserver */
-const observers = new Map<string, ReactiveIntersectionObserver>();
+const observers = new Map<string, ReactiveIntersectionObserver | null>();
 
 /* because of this default observer will be returned for
  * both 'options === undefined' and 'options', which can be
  * simplified to { root: document, rootMargin: '0px', threshold: 0 }
  */
-observers.set(hash({}), defaultIntersectionObserver);
+observers.set(hash({})!, defaultIntersectionObserver);
 
 /* return existing observer with given options or create new */
-export default function getIntersectionObserver(
+export function getIntersectionObserver(
   options?: ReactiveIntersectionObserverInit
-): ReactiveIntersectionObserver {
+): ReactiveIntersectionObserver | null {
   if (!options) return defaultIntersectionObserver;
 
   const _hash = hash(options);
+  /* root is waiting to be resolved to Element */
+  if (_hash === null) return null;
+
   let reactiveObserver = observers.get(_hash);
 
   if (!reactiveObserver) {
@@ -118,14 +136,19 @@ export default function getIntersectionObserver(
   }
 
   return reactiveObserver;
-};
+}
 
-
+/* return value
+ *   null       for element waiting to be resolved
+ *   undefined  for absent element (use document by default)
+ */
 function resolveRef(
   ref: Element | RefObject<Element> | Document | null | undefined
 ) {
-  return !ref
+  return ref === null
     ? null
+    : ref === undefined
+    ? document
     : ref instanceof Element || ref instanceof Document
     ? ref
     : ref.current;
@@ -134,8 +157,10 @@ function resolveRef(
 let idCounter = 1;
 const observables = new WeakMap<Element, number>();
 
-function hash(options: ReactiveIntersectionObserverInit): string {
+function hash(options: ReactiveIntersectionObserverInit): string | null {
   const root = resolveRef(options.root);
+  if (root === null) return null;
+
   let id = !root || root instanceof Document ? 1 : observables.get(root);
   if (!id) {
     id = ++idCounter;
@@ -143,7 +168,10 @@ function hash(options: ReactiveIntersectionObserverInit): string {
   }
 
   const rootMargin = options.rootMargin
-    ? resolveRootMargin(options.rootMargin, { simplify: true })
+    ? resolveRootMargin(options.rootMargin, {
+        viewportUnitsToPixels: true,
+        simplify: true,
+      })
     : "0px";
 
   const threshold = JSON.stringify(simplifyThreshold(options.threshold) ?? 0);
@@ -153,7 +181,6 @@ function hash(options: ReactiveIntersectionObserverInit): string {
 
 type ResolveRootMarginOptions = {
   viewportUnitsToPixels?: boolean;
-  // sanitize?: boolean;
   simplify?: boolean;
 };
 
@@ -165,7 +192,7 @@ export function resolveRootMargin(
 
   const { viewportUnitsToPixels, simplify } = options ?? {};
 
-  let m = rootMargin.split(/\s+/).filter(Boolean); 
+  let m = rootMargin.split(/\s+/).filter(Boolean);
   if (m.length === 0) return "0px";
 
   if (viewportUnitsToPixels) {
@@ -181,7 +208,7 @@ export function resolveRootMargin(
   if (simplify) {
     m = m
       .map((s) => s.replace(/\.\d+(?=\D+)/, "")) // remove decimal part
-      .map((s) => (/^-?0+|^\D/.test(s) ? "0px" : s))   // '0%', 'px' or '00' => '0px'
+      .map((s) => (/^-?0+|^\D/.test(s) ? "0px" : s)); // '0%', 'px' or '00' => '0px'
 
     if (
       (m.length === 4 && m[0] === m[2] && m[1] === m[3]) ||
