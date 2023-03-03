@@ -2,7 +2,12 @@ import { ComponentMeta } from "@storybook/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Describe } from "../../components/Testing/Describe";
 import "../../index.css";
-import getIntersectionObserver, {OnIntersectCallback, ReactiveIntersectionObserver, ReactiveIntersectionObserverInit} from "../../libs/reactive-intersection-observer";
+import getIntersectionObserver, {
+  OnIntersectCallback,
+  ReactiveIntersectionObserver,
+  ReactiveIntersectionObserverInit,
+  resolveRootMargin,
+} from "../../libs/reactive-intersection-observer";
 import useIntersectionObserver from "./useIntersectionObserver";
 
 export default {
@@ -34,6 +39,14 @@ export default {
  *  </Describe>
  */
 
+const shouldThrow = (fn: Function) => {
+  try {
+    fn();
+  } catch (err) {
+    return true;
+  }
+  return false;
+};
 
 export const Tests = () => {
   const [container, setContainer] = useState<Element | null>(null);
@@ -232,12 +245,117 @@ export const Tests = () => {
           [
             `should not recreate observer if 'options' is changed`,
             resultObservers2.length === 1 ||
-              resultObservers2.length === 2 && resultObservers2[0] === resultObservers2[1],
+              (resultObservers2.length === 2 &&
+                resultObservers2[0] === resultObservers2[1]),
           ],
           [
             `should dynamically switch targets`,
-            curResultTarget === container4Ref.current
-            && curResultTarget !== container3Ref.current
+            curResultTarget === container4Ref.current &&
+              curResultTarget !== container3Ref.current,
+          ],
+        ]}
+      </Describe>
+
+      <Describe title="resolveRootMargin(rootMargin, options?)">
+        {[
+          [`resolveRootMargin() === '0px'`, resolveRootMargin() === "0px"],
+          [
+            `resolveRootMargin('100vh') === '100vh'`,
+            resolveRootMargin("100vh") === "100vh",
+          ],
+          [
+            `resolveRootMargin('100vh', { viewportUnitsToPixels: true }) === '{viewport_height_in_px}px'`,
+            resolveRootMargin("100vh", { viewportUnitsToPixels: true }) ===
+              window.innerHeight + "px",
+          ],
+          [
+            `resolveRootMargin('-10vh', { viewportUnitsToPixels: true }) === '-{viewport_height_in_px/10}px'`,
+            resolveRootMargin("-10vh", { viewportUnitsToPixels: true }) ===
+              "-" + window.innerHeight / 10 + "px",
+          ],
+          [
+            `resolveRootMargin('0vh', { viewportUnitsToPixels: true }) === '0px'`,
+            resolveRootMargin("0vh", { viewportUnitsToPixels: true }) === "0px",
+          ],
+          [
+            `resolveRootMargin('50.5vh', { viewportUnitsToPixels: true }) === '{0.505*viewport_height}px'`,
+            resolveRootMargin("50.5vh", { viewportUnitsToPixels: true }) ===
+              (50.5 * window.innerHeight) / 100 + "px",
+          ],
+          [
+            `resolveRootMargin('100vw', { viewportUnitsToPixels: true }) === '{viewport_width_in_px}px'`,
+            resolveRootMargin("100vw", { viewportUnitsToPixels: true }) ===
+              window.innerWidth + "px",
+          ],
+          [
+            `resolveRootMargin('-10vw', { viewportUnitsToPixels: true }) === '-{viewport_width_in_px/10}px'`,
+            resolveRootMargin("-10vw", { viewportUnitsToPixels: true }) ===
+              "-" + window.innerWidth / 10 + "px",
+          ],
+          [
+            `resolveRootMargin('0vw', { viewportUnitsToPixels: true }) === '0px'`,
+            resolveRootMargin("0vw", { viewportUnitsToPixels: true }) === "0px",
+          ],
+          [
+            `resolveRootMargin('50.5vw', { viewportUnitsToPixels: true }) === '{0.505*viewport_width}px'`,
+            resolveRootMargin("50.5vw", { viewportUnitsToPixels: true }) ===
+              (50.5 * window.innerWidth) / 100 + "px",
+          ],
+          [
+            `resolveRootMargin('100vh 100vw', { viewportUnitsToPixels: true }) === '{viewport_height}px {viewport_width}px'`,
+            resolveRootMargin("100vh 100vw", {
+              viewportUnitsToPixels: true,
+            }) ===
+              window.innerHeight + "px " + window.innerWidth + "px",
+          ],
+          [
+            `resolveRootMargin('10px 10px   10px 10px') === '10px 10px 10px 10px'`,
+            resolveRootMargin("10px 10px   10px 10px") ===
+              "10px 10px 10px 10px",
+          ],
+          [
+            `resolveRootMargin('10px 10px   10px 10px', { simplify: true }) === '10px'`,
+            resolveRootMargin("10px 10px   10px 10px", { simplify: true }) ===
+              "10px",
+          ],
+          [
+            `resolveRootMargin('10px 10% 10px 10%', { simplify: true }) === '10px 10%'`,
+            resolveRootMargin("10px 10% 10px 10%", { simplify: true }) ===
+              "10px 10%",
+          ],
+          [
+            `resolveRootMargin('10px 10% 10px', { simplify: true }) === '10px 10%'`,
+            resolveRootMargin("10px 10% 10px", { simplify: true }) ===
+              "10px 10%",
+          ],
+          [
+            `resolveRootMargin('10px 10%', { simplify: true }) === '10px 10%'`,
+            resolveRootMargin("10px 10%", { simplify: true }) === "10px 10%",
+          ],
+          [
+            `resolveRootMargin('10px 10px', { simplify: true }) === '10px'`,
+            resolveRootMargin("10px 10px", { simplify: true }) === "10px",
+          ],
+          [
+            `resolveRootMargin('10.9px', { simplify: true }) === '10px'`,
+            resolveRootMargin("10.9px", { simplify: true }) === "10px",
+          ],
+          [
+            `resolveRootMargin('-0.9px', { simplify: true }) === '0px'`,
+            resolveRootMargin("-0.9px", { simplify: true }) === "0px",
+          ],
+          [
+            `resolveRootMargin('-0.9%', { simplify: true }) === '0px'`,
+            resolveRootMargin("-0.9%", { simplify: true }) === "0px",
+          ],
+          [
+            `resolveRootMargin('50.5vh', { viewportUnitsToPixels: true, simplify: true }) === '{0.505*viewport_height_in_px_without_decimal_part}px'`,
+            resolveRootMargin("50.5vh", {
+              viewportUnitsToPixels: true,
+              simplify: true,
+            }) ===
+              (0.505 * window.innerHeight).toString().replace(/\..*$/, "") +
+                "px",
           ],
         ]}
       </Describe>
