@@ -49,7 +49,7 @@ export type ReactiveIntersectionObserverInit = {
   root?: Element | RefObject<Element> | Document | null;
 } & Omit<IntersectionObserverInit, "root">;
 
-function createReactiveIntersectionObserver(
+export function createReactiveIntersectionObserver(
   options?: IntersectionObserverInit
 ): ReactiveIntersectionObserver {
   let reactiveIntersectionObserver: ReactiveIntersectionObserver;
@@ -59,7 +59,7 @@ function createReactiveIntersectionObserver(
       const _target = entry.target as WithKey;
       _target[onIntersectKey]?.(entry, reactiveIntersectionObserver);
     });
-  }, options);
+  }, { root: document, ...options });
 
   reactiveIntersectionObserver = {
     root: nativeIntersectionObserver.root,
