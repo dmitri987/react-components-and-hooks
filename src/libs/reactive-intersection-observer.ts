@@ -143,7 +143,7 @@ function hash(options: ReactiveIntersectionObserverInit): string {
   }
 
   const rootMargin = options.rootMargin
-    ? sanitizeAndSimplifyRootMargin(options.rootMargin)
+    ? resolveRootMargin(options.rootMargin, { simplify: true })
     : "0px";
 
   const threshold = JSON.stringify(simplifyThreshold(options.threshold) ?? 0);
@@ -151,25 +151,46 @@ function hash(options: ReactiveIntersectionObserverInit): string {
   return id + "::" + rootMargin + "::" + threshold;
 }
 
-/* fix syntax errors and bring rootMargin to the shortest form */
-function sanitizeAndSimplifyRootMargin(rootMargin?: string) {
+type ResolveRootMarginOptions = {
+  viewportUnitsToPixels?: boolean;
+  // sanitize?: boolean;
+  simplify?: boolean;
+};
+
+export function resolveRootMargin(
+  rootMargin?: string,
+  options?: ResolveRootMarginOptions
+) {
   if (!rootMargin) return "0px";
 
-  let m = rootMargin
-    .split(/\s+/)
-    .map((s) => s.replace(/\.\d+(?=\D+)/, "")) // remove decimal part
-    .filter((s) => /^-?\d+(px|%)$/.test(s)) // remove invalid margins
-    .map((s) => (/^0+/.test(s) ? "0px" : s)); // '0%' or '00' => '0px'
+  const { viewportUnitsToPixels, simplify } = options ?? {};
 
+  let m = rootMargin.split(/\s+/).filter(Boolean); 
   if (m.length === 0) return "0px";
 
-  if (
-    (m.length === 4 && m[0] === m[2] && m[1] === m[3]) ||
-    (m.length === 3 && m[0] === m[2])
-  )
-    m = [m[0], m[1]];
+  if (viewportUnitsToPixels) {
+    m = m.map((s) =>
+      s.replace(/^(-?\d+\.?\d*)(vh|vw)$/, (_, size, unit) => {
+        const viewportSize =
+          unit === "vh" ? window.innerHeight : window.innerWidth;
+        return (+size * viewportSize) / 100 + "px";
+      })
+    );
+  }
 
-  if (m.length === 2 && m[0] === m[1]) m = [m[0]];
+  if (simplify) {
+    m = m
+      .map((s) => s.replace(/\.\d+(?=\D+)/, "")) // remove decimal part
+      .map((s) => (/^-?0+|^\D/.test(s) ? "0px" : s))   // '0%', 'px' or '00' => '0px'
+
+    if (
+      (m.length === 4 && m[0] === m[2] && m[1] === m[3]) ||
+      (m.length === 3 && m[0] === m[2])
+    )
+      m = [m[0], m[1]];
+
+    if (m.length === 2 && m[0] === m[1]) m = [m[0]];
+  }
 
   return m.join(" ");
 }
