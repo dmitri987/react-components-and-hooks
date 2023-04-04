@@ -9,6 +9,7 @@ export type ScrollCoordinates = {
 };
 
 export type UseScrollProps = {
+  // TODO: rename to 'root' ??
   /* if undefined, track window scroll (default) */
   container?: RefObject<Element> | Element | null;
   /* limit scroll direction to track; default both */
@@ -27,7 +28,7 @@ const resolveElement = (ref?: RefObject<Element> | Element): Element =>
 
 // return empty object initially
 function useScroll({
-  container,
+  container = document.documentElement,
   axis,
   throttle: throttleInterval = 0,
 }: UseScrollProps = {}): ScrollCoordinates {
