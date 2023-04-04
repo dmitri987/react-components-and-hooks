@@ -1,6 +1,6 @@
 import {RefObject, useCallback, useEffect, useRef, useState} from "react";
+import {useIntersection, useIntersectionObserver} from "../../components/Intersection/Intersection";
 import {OnIntersectCallback, ReactiveIntersectionObserver} from "../../libs/reactive-intersection-observer";
-import useIntersectionObserver from "../useIntersectionObserver/useIntersectionObserver";
 
 
 export type ImageIntersectionObserverOptions = {
@@ -53,5 +53,5 @@ export default function useImageIntersectionObserver(
     []
   );
 
-  useIntersectionObserver(target, defaultOnIntersect, options)
+  useIntersection({ target, onIntersect: defaultOnIntersect, ...options })
 }
