@@ -455,6 +455,10 @@ export const Tests = () => {
             resolveRootMargin("10px 10px", { simplify: true }) === "10px",
           ],
           [
+            `resolveRootMargin('-10px', { simplify: true }) === '-10px'`,
+            resolveRootMargin("-10px", { simplify: true }) === "-10px",
+          ],
+          [
             `resolveRootMargin('10.9px', { simplify: true }) === '10px'`,
             resolveRootMargin("10.9px", { simplify: true }) === "10px",
           ],
@@ -465,6 +469,14 @@ export const Tests = () => {
           [
             `resolveRootMargin('-0.9%', { simplify: true }) === '0px'`,
             resolveRootMargin("-0.9%", { simplify: true }) === "0px",
+          ],
+          [
+            `resolveRootMargin('0 10px') === '0 10px'`,
+            resolveRootMargin('0 10px') === '0 10px',
+          ],
+          [
+            `resolveRootMargin('0 10px', { simplify: true }) === '0px 10px'`,
+            resolveRootMargin('0 10px', { simplify: true }) === '0px 10px',
           ],
           [
             `resolveRootMargin('50.5vh', { viewportUnitsToPixels: true, simplify: true }) === '{0.505*viewport_height_in_px_without_decimal_part}px'`,

@@ -49,10 +49,9 @@ export function useIntersectionObserver(
   options?: ReactiveIntersectionObserverInit
 ): ReactiveIntersectionObserver | null {
   const observerContext = useContext(IntersectionObserverContext);
-  // console.log("useIntersectionObserver:", observerContext, options);
   return useMemo(
     () =>
-      !options?.root && observerContext !== undefined
+      !options && observerContext !== undefined
         ? observerContext
         : getIntersectionObserver(options),
     [options]
@@ -110,21 +109,18 @@ export function useIntersection(
   const onIntersectRef = useRef(onIntersect);
 
   const observer = useIntersectionObserver(observerOptions(options));
-
   const setRef = useCallback((instance: Element | null) => {
     setTarget(instance);
   }, []);
 
   useEffect(() => {
     if (_target === undefined) return;
-console.log('useIntersection: _target', _target)
+
     setTarget(_target || null);
   }, [_target]);
 
   useEffect(() => {
     if (!observer || !target) return;
-
-    console.log("Intersection init", target, observer);
 
     observer.observe(target, (entry) => {
       if (onIntersectRef.current) onIntersectRef.current(entry, observer);
