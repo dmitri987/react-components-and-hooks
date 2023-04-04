@@ -1,19 +1,21 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { CircularProgress } from "@mui/material";
+// import { CircularProgress } from "@mui/material";
 import Switch from "./components/Switch/Switch";
 import { Switch as HuiSwitch } from "@headlessui/react";
 import Input from "./components/Input/Input";
 import { Form } from "react-bootstrap";
 import { Listbox } from "@headlessui/react";
 import  Image  from './components/Image/Image';
+import SwitchUnstyled from "@mui/base/SwitchUnstyled";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <div className="grid place-content-center gap-4">
+      <SwitchUnstyled>Base Button</SwitchUnstyled>
       <Image />
       <Switch className="bg-gray-500 ui-checked:bg-blue-500 overflow-hidden duration-150" />
       <Input className="form-control w-full border-red-500 focus:border-red-500 " />
@@ -49,7 +51,6 @@ function App() {
       <span className="spinner-border duration-300 text-green-600 w-12 h-12"></span>
       <span className="animate-pulse bg-green-600 rounded-full w-12 h-12"></span>
       <span className="animate-grow bg-green-600 rounded-full w-12 h-12"></span>
-      <CircularProgress />
 
       <input type="checkbox" className="btn-check" />
       <input type="range" className="form-range" />
