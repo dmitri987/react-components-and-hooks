@@ -64,6 +64,7 @@ function createReactiveIntersectionObserver(
       root: options?.root ?? document,
       rootMargin: resolveRootMargin(options?.rootMargin, {
         viewportUnitsToPixels: true,
+        simplify: true,
       }),
       threshold: options?.threshold,
     }
@@ -208,7 +209,7 @@ export function resolveRootMargin(
   if (simplify) {
     m = m
       .map((s) => s.replace(/\.\d+(?=\D+)/, "")) // remove decimal part
-      .map((s) => (/^-?0+|^\D/.test(s) ? "0px" : s)); // '0%', 'px' or '00' => '0px'
+      .map((s) => (/^-?(0+|[^-\d])/.test(s) ? "0px" : s)); // '0%', 'px' or '00' => '0px'
 
     if (
       (m.length === 4 && m[0] === m[2] && m[1] === m[3]) ||
