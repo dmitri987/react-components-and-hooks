@@ -114,7 +114,7 @@ function useSlideOnScroll(
 
   const [offset, setOffset] = useSum(
     dir.step * ((cur ?? 0) - (prev ?? 0)),
-    getSizeRange(sizeRef.current, dir)
+    { clamp: getSizeRange(sizeRef.current, dir) }
   );
 
   useEffect(() => {
